@@ -1,1 +1,1 @@
-from .userModel import userReqMod,userResMod,loginReqMod
+from .userModel import loginReqMod,userResMod,registerReqMod

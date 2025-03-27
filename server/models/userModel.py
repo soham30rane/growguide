@@ -1,15 +1,28 @@
 from pydantic import BaseModel
 
-class userReqMod(BaseModel):
-    email:str
+class registerReqMod(BaseModel):
+    phone:str
     password:str
     username:str
+    latitude:str
+    longitude:str
+    address:str
+    language_preference:str
+    domain:str
+    roles:str
 
 class loginReqMod(BaseModel):
-    email:str
+    phone:str
     password:str
+
 
 class userResMod(BaseModel):
     error:bool
     token:str
     username:str
+    latitude:str
+    longitude:str
+    address:str
+    language_preference:str
+    domain:str
+    roles:str

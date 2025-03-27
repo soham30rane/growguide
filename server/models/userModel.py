@@ -8,7 +8,7 @@ class registerReqMod(BaseModel):
     longitude:str
     address:str
     language_preference:str
-    domain:str
+    description:str
     roles:str
 
 class loginReqMod(BaseModel):
@@ -24,5 +24,5 @@ class userResMod(BaseModel):
     longitude:str
     address:str
     language_preference:str
-    domain:str
+    description:str
     roles:str

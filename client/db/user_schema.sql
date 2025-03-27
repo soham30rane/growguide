@@ -8,5 +8,5 @@ CREATE TABLE users (
     address TEXT NOT NULL,
     language_preference TEXT NOT NULL,
     roles TEXT NOT NULL,
-    domain TEXT NOT NULL
+    description TEXT NOT NULL
 );

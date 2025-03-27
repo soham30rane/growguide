@@ -261,6 +261,34 @@ input.error {
   text-decoration: underline;
 }
 
+.language-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.language-button {
+  padding: 10px 20px;
+  background-color: #e5f8e0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s, color 0.3s;
+  color: #333333;
+}
+
+.language-button:hover {
+  background-color: #78e077;
+  color: #000;
+}
+
+.language-button.selected {
+  background-color: #4caf50;
+  color: white;
+  border-color: #4caf50;
+  transform: scale(1.05);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .auth-card {

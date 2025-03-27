@@ -5,10 +5,44 @@ import Link from 'next/link';
 import '@/styles/auth.css';
 import '@/styles/agro.css';
 
+const languageTexts = {
+  English: {
+    title: "Join GrowGuide",
+    subtitle: "Create an account and start your plant journey",
+    phoneLabel: "Phone Number",
+    usernameLabel: "Username",
+    passwordLabel: "Password",
+    roleLabel: "Role",
+    aboutLabel: "Write a bit about yourself",
+    locationLabel: "Location",
+    nextButton: "Next",
+    submitButton: "Submit",
+    backButton: "Back",
+    loginPrompt: "Already have an account?",
+    loginLink: "Log in",
+  },
+  Hindi: {
+    title: "ग्रो गाइड से जुड़ें",
+    subtitle: "एक खाता बनाएं और अपनी पौधों की यात्रा शुरू करें",
+    phoneLabel: "फोन नंबर",
+    usernameLabel: "उपयोगकर्ता नाम",
+    passwordLabel: "पासवर्ड",
+    roleLabel: "भूमिका",
+    aboutLabel: "अपने बारे में थोड़ा लिखें",
+    locationLabel: "स्थान",
+    nextButton: "अगला",
+    submitButton: "जमा करें",
+    backButton: "वापस",
+    loginPrompt: "पहले से ही एक खाता है?",
+    loginLink: "लॉग इन करें",
+  },
+  // Add other languages here...
+};
+
 const RegisterPage = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    language: '',
+    language: 'English',
     phone: '',
     username: '',
     password: '',
@@ -71,6 +105,8 @@ const RegisterPage = () => {
     }
   };
 
+  const texts = languageTexts[formData.language];
+
   return (
     <div className="auth-container">
       <div className="auth-card">
@@ -78,15 +114,15 @@ const RegisterPage = () => {
           <img src="/images/plants-growing.svg" alt="Plants growing illustration" />
         </div>
         <div className="auth-form">
-          <h1>Join GrowGuide</h1>
-          <p className="subtitle">Create an account and start your plant journey</p>
+          <h1>{texts.title}</h1>
+          <p className="subtitle">{texts.subtitle}</p>
           
           <form onSubmit={step === 4 ? handleSubmit : handleNext}>
             {step === 1 && (
               <div className="form-group">
                 <label>Preferred Language</label>
                 <div className="language-buttons">
-                  {['English', 'Hindi', 'Marathi', 'Telugu', 'Kannada', 'Gujarati', 'Punjabi'].map((lang) => (
+                  {Object.keys(languageTexts).map((lang) => (
                     <button
                       type="button"
                       key={lang}
@@ -104,12 +140,12 @@ const RegisterPage = () => {
             {step === 2 && (
               <>
                 <div className="form-group">
-                  <label htmlFor="phone">Phone Number</label>
+                  <label htmlFor="phone">{texts.phoneLabel}</label>
                   <input
                     type="text"
                     id="phone"
                     name="phone"
-                    placeholder="Your phone number"
+                    placeholder={texts.phoneLabel}
                     value={formData.phone}
                     onChange={handleChange}
                     className={errors.phone ? 'error' : ''}
@@ -118,12 +154,12 @@ const RegisterPage = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="username">Username</label>
+                  <label htmlFor="username">{texts.usernameLabel}</label>
                   <input
                     type="text"
                     id="username"
                     name="username"
-                    placeholder="Your username"
+                    placeholder={texts.usernameLabel}
                     value={formData.username}
                     onChange={handleChange}
                     className={errors.username ? 'error' : ''}
@@ -132,12 +168,12 @@ const RegisterPage = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="password">Password</label>
+                  <label htmlFor="password">{texts.passwordLabel}</label>
                   <input
                     type="password"
                     id="password"
                     name="password"
-                    placeholder="Create a password"
+                    placeholder={texts.passwordLabel}
                     value={formData.password}
                     onChange={handleChange}
                     className={errors.password ? 'error' : ''}
@@ -150,7 +186,7 @@ const RegisterPage = () => {
             {step === 3 && (
               <>
                 <div className="form-group">
-                  <label htmlFor="role">Role</label>
+                  <label htmlFor="role">{texts.roleLabel}</label>
                   <select
                     id="role"
                     name="role"
@@ -158,7 +194,7 @@ const RegisterPage = () => {
                     onChange={handleChange}
                     className={errors.role ? 'error' : ''}
                   >
-                    <option value="">Select a role</option>
+                    <option value="">{texts.roleLabel}</option>
                     <option value="Farmer">Farmer</option>
                     <option value="Expert/Consultant">Expert/Consultant</option>
                     <option value="Service Provider">Service Provider</option>
@@ -167,11 +203,11 @@ const RegisterPage = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="about">Write a bit about yourself</label>
+                  <label htmlFor="about">{texts.aboutLabel}</label>
                   <textarea
                     id="about"
                     name="about"
-                    placeholder="Describe your role or expertise (e.g., type of crops)"
+                    placeholder={texts.aboutLabel}
                     value={formData.about}
                     onChange={handleChange}
                     className={errors.about ? 'error' : ''}
@@ -183,12 +219,12 @@ const RegisterPage = () => {
 
             {step === 4 && (
               <div className="form-group">
-                <label htmlFor="location">Location</label>
+                <label htmlFor="location">{texts.locationLabel}</label>
                 <input
                   type="text"
                   id="location"
                   name="location"
-                  placeholder="Enter your location"
+                  placeholder={texts.locationLabel}
                   value={formData.location}
                   onChange={handleChange}
                   className={errors.location ? 'error' : ''}
@@ -200,18 +236,18 @@ const RegisterPage = () => {
             <div className="form-navigation">
               {step > 1 && (
                 <button onClick={handleBack} className="auth-button secondary">
-                  Back
+                  {texts.backButton}
                 </button>
               )}
               <button type="submit" className="auth-button">
-                {step === 4 ? 'Submit' : 'Next'}
+                {step === 4 ? texts.submitButton : texts.nextButton}
               </button>
             </div>
           </form>
 
           <div className="auth-footer">
             <p>
-              Already have an account? <Link href="/login">Log in</Link>
+              {texts.loginPrompt} <Link href="/login">{texts.loginLink}</Link>
             </p>
           </div>
         </div>

@@ -14,12 +14,12 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 @router.post("/login", response_model=userResMod)
 async def login(req: loginReqMod):
     try:
-        response = supabase.table("users").select("uid, password, username, latitude, longitude, address, language_preference, domain, roles").eq("phone", req.phone).single().execute()
+        response = supabase.table("users").select("uid, password, username, latitude, longitude, address, language_preference, description, roles").eq("phone", req.phone).single().execute()
         if not response.data:
-            return {"error": True, "token": "", "username": "", "latitude": "", "longitude": "", "address": "", "language_preference": "", "domain": "", "roles": ""}
+            return {"error": True, "token": "", "username": "", "latitude": "", "longitude": "", "address": "", "language_preference": "", "description": "", "roles": ""}
         user = response.data
         if not verify_hash_pass(req.password, user["password"]):
-            return {"error": True, "token": "", "username": "", "latitude": "", "longitude": "", "address": "", "language_preference": "", "domain": "", "roles": ""}
+            return {"error": True, "token": "", "username": "", "latitude": "", "longitude": "", "address": "", "language_preference": "", "description": "", "roles": ""}
         return {
             "error": False,
             "token": user["uid"],
@@ -28,7 +28,7 @@ async def login(req: loginReqMod):
             "longitude": str(user["longitude"]),
             "address": user["address"],
             "language_preference": user["language_preference"],
-            "domain": user["domain"],
+            "description": user["description"],
             "roles": user["roles"]
         }
     except Exception as e:
@@ -39,7 +39,7 @@ async def register(req: registerReqMod):
     try:
         response = supabase.table("users").select("uid").eq("phone", req.phone).execute()
         if response.data:
-            return {"error": True, "token": "", "username": "", "latitude": "", "longitude": "", "address": "", "language_preference": "", "domain": "", "roles": ""}
+            return {"error": True, "token": "", "username": "", "latitude": "", "longitude": "", "address": "", "language_preference": "", "description": "", "roles": ""}
         hash_pass = hashed_pass(req.password)
         response = supabase.table("users").insert({
             "uid": str(uuid.uuid4()),
@@ -50,7 +50,7 @@ async def register(req: registerReqMod):
             "longitude": req.longitude,
             "address": req.address,
             "language_preference": req.language_preference,
-            "domain": req.domain,
+            "description": req.description,
             "roles": req.roles
         }).execute()
         user_id = response.data[0]["uid"]
@@ -62,7 +62,7 @@ async def register(req: registerReqMod):
             "longitude": req.longitude,
             "address": req.address,
             "language_preference": req.language_preference,
-            "domain": req.domain,
+            "description": req.description,
             "roles": req.roles
         }
     except Exception as e:

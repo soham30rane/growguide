@@ -12,10 +12,15 @@ export default async function loginAction(formData) {
     });
     let data = await res.json();
     if (!data.error) {
-      console.log(data)
       const cookieStore = await cookies(); // Await cookies() before using it
       cookieStore.set('token', data.token);
       cookieStore.set('username', data.username);
+      cookieStore.set('latitude', data.latitude);
+      cookieStore.set('longitude', data.longitude);
+      cookieStore.set('address', data.address);
+      cookieStore.set('language_preference', data.language_preference);
+      cookieStore.set('description', data.description);
+      cookieStore.set('roles', data.roles);
       return { success: true, username: data.username }; // Return username in the response
     }
     return { success: false };

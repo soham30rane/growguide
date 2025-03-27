@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import '@/styles/agro.css';
 import '@/styles/auth.css';
+import Image from 'next/image';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -42,9 +43,16 @@ const LoginPage = () => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <div className="auth-image">
-          <img src="/images/plant-illustration.svg" alt="Growing plant illustration" />
-        </div>
+      <div className="auth-image">
+          <Image
+              src="/images/plant-illustration.webp"
+              alt="Growing plant illustration"
+              width={300}
+              height={300}
+              priority
+              className="w-auto h-auto"
+          />
+      </div>
         <div className="auth-form">
           <h1>Welcome Back!</h1>
           <p className="subtitle">Log in to track your plants' growth journey</p>

@@ -5,17 +5,20 @@ import Link from 'next/link';
 import '@/styles/auth.css';
 import '@/styles/agro.css';
 import Image from 'next/image';
+import registerAction from '@/actions/register';
 
 const RegisterPage = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    language: '',
+    language_preference: '',
     phone: '',
     username: '',
     password: '',
-    role: '',
-    about: '',
-    location: '',
+    roles: '',
+    description: '',
+    address: '',
+    latitude: 12.971598,
+    longitude: 77.594566,
   });
   const [errors, setErrors] = useState({});
 
@@ -25,11 +28,12 @@ const RegisterPage = () => {
       ...formData,
       [name]: value,
     });
+    console.log(formData);
   };
 
   const validateStep = () => {
     const newErrors = {};
-    if (step === 1 && !formData.language) newErrors.language = 'Language is required';
+    if (step === 1 && !formData.language_preference) newErrors.language_preference = 'Language is required';
     if (step === 2) {
       if (!formData.phone) newErrors.phone = 'Phone number is required';
       if (!formData.username) newErrors.username = 'Username is required';
@@ -38,10 +42,10 @@ const RegisterPage = () => {
         newErrors.password = 'Password must be at least 8 characters';
     }
     if (step === 3) {
-      if (!formData.role) newErrors.role = 'Role is required';
-      if (!formData.about) newErrors.about = 'This field is required';
+      if (!formData.roles) newErrors.roles = 'Role is required';
+      if (!formData.description) newErrors.description = 'This field is required';
     }
-    if (step === 4 && !formData.location) newErrors.location = 'Location is required';
+    if (step === 4 && !formData.address) newErrors.address = 'Location is required';
     return newErrors;
   };
 
@@ -61,12 +65,32 @@ const RegisterPage = () => {
     setStep(step - 1);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateStep();
     if (Object.keys(newErrors).length === 0) {
-      console.log('Registration submitted:', formData);
-      // Handle registration logic here
+      setErrors({});
+      try {
+        let response = await registerAction({
+          phone: formData.phone,
+          username: formData.username,
+          password: formData.password,
+          language_preference: formData.language_preference,
+          roles: formData.roles,
+          description: formData.description,
+          address: formData.address,
+          latitude: formData.latitude, // Use latitude from formData
+          longitude: formData.longitude, // Use longitude from formData
+        });
+        if (response.success) {
+          console.log('Registration successful:', response);
+          // Redirect to login or dashboard
+        } else {
+          console.log('Registration failed');
+        }
+      } catch (e) {
+        console.error(e);
+      }
     } else {
       setErrors(newErrors);
     }
@@ -98,14 +122,18 @@ const RegisterPage = () => {
                     <button
                       type="button"
                       key={lang}
-                      className={`language-button ${formData.language === lang ? 'selected' : ''}`}
-                      onClick={() => setFormData({ ...formData, language: lang })}
+                      className={`language-button ${formData.language_preference === lang ? 'selected' : ''}`}
+                      onClick={() => {
+                        // setFormData({ ...formData, language_preference: lang })
+                        handleChange({ target: { name: 'language_preference', value: lang } });
+                        // console.log("hello", lang, );
+                      }}
                     >
                       {lang}
                     </button>
                   ))}
                 </div>
-                {errors.language && <p className="error-text">{errors.language}</p>}
+                {errors.language_preference && <p className="error-text">{errors.language_preference}</p>}
               </div>
             )}
 
@@ -158,50 +186,50 @@ const RegisterPage = () => {
             {step === 3 && (
               <>
                 <div className="form-group">
-                  <label htmlFor="role">Role</label>
+                  <label htmlFor="roles">Roles</label> {/* Renamed from "Role" */}
                   <select
-                    id="role"
-                    name="role"
-                    value={formData.role}
+                    id="roles" // Renamed from "role"
+                    name="roles"
+                    value={formData.roles}
                     onChange={handleChange}
-                    className={errors.role ? 'error' : ''}
+                    className={errors.roles ? 'error' : ''}
                   >
                     <option value="">Select a role</option>
                     <option value="Farmer">Farmer</option>
                     <option value="Expert/Consultant">Expert/Consultant</option>
                     <option value="Service Provider">Service Provider</option>
                   </select>
-                  {errors.role && <p className="error-text">{errors.role}</p>}
+                  {errors.roles && <p className="error-text">{errors.roles}</p>}
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="about">Write a bit about yourself</label>
+                  <label htmlFor="description">Write a bit about yourself</label> {/* Renamed from "about" */}
                   <textarea
-                    id="about"
-                    name="about"
+                    id="description" // Renamed from "about"
+                    name="description"
                     placeholder="Describe your role or expertise (e.g., type of crops)"
-                    value={formData.about}
+                    value={formData.description}
                     onChange={handleChange}
-                    className={errors.about ? 'error' : ''}
+                    className={errors.description ? 'error' : ''}
                   />
-                  {errors.about && <p className="error-text">{errors.about}</p>}
+                  {errors.description && <p className="error-text">{errors.description}</p>}
                 </div>
               </>
             )}
 
             {step === 4 && (
               <div className="form-group">
-                <label htmlFor="location">Location</label>
+                <label htmlFor="address">Address</label> {/* Renamed from "Location" */}
                 <input
                   type="text"
-                  id="location"
-                  name="location"
-                  placeholder="Enter your location"
-                  value={formData.location}
+                  id="address" // Renamed from "location"
+                  name="address"
+                  placeholder="Enter your address"
+                  value={formData.address}
                   onChange={handleChange}
-                  className={errors.location ? 'error' : ''}
+                  className={errors.address ? 'error' : ''}
                 />
-                {errors.location && <p className="error-text">{errors.location}</p>}
+                {errors.address && <p className="error-text">{errors.address}</p>}
               </div>
             )}
 

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import '@/styles/agro.css';
 import '@/styles/auth.css';
 
 const LoginPage = () => {

@@ -1,4 +1,5 @@
 /* Light green joyful theme for auth pages */
+@import './agro.css';
 
 :root {
   --primary-green: #4CAF50;
@@ -15,34 +16,96 @@
   align-items: center;
   min-height: 100vh;
   background-color: var(--very-light-green);
-  background-image: linear-gradient(120deg, #F1F8E9 0%, #DCEDC8 100%);
+  background-image: linear-gradient(120deg, #F1F8E9 0%, var(--very-light-green) 100%), 
+                    url('/images/leaf-pattern.svg');
+  background-blend-mode: overlay;
+  background-size: cover, 200px;
+  background-repeat: no-repeat, repeat;
+  background-position: center;
   padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-family);
+  position: relative;
+}
+
+.auth-container::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 100px;
+  height: 100px;
+  background-image: url('/images/plant-decoration.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.15;
+}
+
+.auth-container::after {
+  content: '';
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  width: 120px;
+  height: 120px;
+  background-image: url('/images/leaf-cluster.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.15;
 }
 
 .auth-card {
   display: flex;
   background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
   width: 900px;
   max-width: 100%;
   overflow: hidden;
   min-height: 600px;
+  position: relative;
+  z-index: 1;
 }
 
 .auth-image {
   flex: 1;
-  background-color: var(--light-green);
+  background: linear-gradient(135deg, var(--light-green), var(--primary-green));
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-image::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.auth-image::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  left: -30px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .auth-image img {
   max-width: 100%;
   max-height: 80%;
+  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+  animation: breathe 6s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
 }
 
 .auth-form {
@@ -50,16 +113,42 @@
   padding: 40px;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.auth-form::before {
+  content: '';
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  width: 40px;
+  height: 40px;
+  background-image: url('/images/small-leaf.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.1;
 }
 
 h1 {
   color: var(--dark-green);
   margin-bottom: 10px;
   font-size: 32px;
+  position: relative;
+  display: inline-block;
+}
+
+h1::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background-color: var(--accent-green);
 }
 
 .subtitle {
-  color: #6c757d;
+  color: var(--dark-gray);
   margin-bottom: 30px;
   font-size: 16px;
 }
@@ -112,40 +201,63 @@ input.error {
 }
 
 .auth-button {
-  background-color: var(--primary-green);
+  background: var(--gradient-green);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--border-radius-md);
   padding: 12px 20px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
   width: 100%;
   margin-top: 10px;
+  box-shadow: var(--shadow-green);
+  position: relative;
+  overflow: hidden;
 }
 
 .auth-button:hover {
-  background-color: var(--dark-green);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46, 139, 87, 0.2);
+}
+
+.auth-button:active {
+  transform: translateY(1px);
 }
 
 .auth-footer {
   margin-top: auto;
   text-align: center;
   padding-top: 20px;
+  position: relative;
+}
+
+.auth-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 1px;
+  background-color: var(--light-green);
+  opacity: 0.5;
 }
 
 .auth-footer p {
-  color: #6c757d;
+  color: var(--medium-gray);
 }
 
 .auth-footer a {
   color: var(--primary-green);
   text-decoration: none;
   font-weight: 600;
+  transition: color 0.2s;
 }
 
 .auth-footer a:hover {
+  color: var(--dark-green);
   text-decoration: underline;
 }
 

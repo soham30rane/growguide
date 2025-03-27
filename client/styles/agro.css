@@ -1,0 +1,134 @@
+/* GrowGuide theme variables - central theme file */
+
+:root {
+  /* Primary brand colors - Enhanced with richer greens */
+  --primary-green: #2E8B57; /* Sea green - more natural */
+  --light-green: #7CB342; /* Vibrant leaf green */
+  --very-light-green: #E8F5E9; /* Softer mint background */
+  --dark-green: #1B5E20; /* Deep forest green */
+  --accent-green: #00BFA5; /* Bright teal accent */
+  --lime-green: #AEEA00; /* Bright highlight green */
+  --emerald-green: #00C853; /* Vibrant emerald */
+  
+  /* Nature-inspired supporting colors */
+  --soil-brown: #5D4037;
+  --wood-brown: #8D6E63;
+  --sand-tan: #D7CCC8;
+  --leaf-yellow: #FDD835;
+  --sky-blue: #B3E5FC;
+  --water-blue: #4FC3F7;
+  
+  /* Neutral colors */
+  --white: #FFFFFF;
+  --light-gray: #F5F5F5;
+  --medium-gray: #9E9E9E;
+  --dark-gray: #424242;
+  --black: #212121;
+  
+  /* Feedback colors */
+  --error-red: #f44336;
+  --warning-orange: #FF9800;
+  --success-green: #00C853;
+  --info-blue: #2196F3;
+  
+  /* Typography */
+  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  
+  /* Border radius */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(46, 139, 87, 0.15);
+  --shadow-green: 0 4px 20px rgba(46, 139, 87, 0.2);
+  
+  /* Gradients */
+  --gradient-green: linear-gradient(120deg, var(--primary-green), var(--emerald-green));
+  --gradient-light: linear-gradient(120deg, #E8F5E9, #DCEDC8);
+}
+
+/* Common button styles */
+.primary-button {
+  background: var(--gradient-green);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-green);
+  position: relative;
+  overflow: hidden;
+}
+
+.primary-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(46, 139, 87, 0.25);
+}
+
+.primary-button:active {
+  transform: translateY(1px);
+}
+
+.secondary-button {
+  background-color: transparent;
+  color: var(--primary-green);
+  border: 2px solid var(--primary-green);
+  border-radius: var(--border-radius-md);
+  padding: 10px 26px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.secondary-button:hover {
+  background-color: var(--very-light-green);
+  color: var(--dark-green);
+  border-color: var(--dark-green);
+  transform: translateY(-2px);
+}
+
+.secondary-button:active {
+  transform: translateY(1px);
+}
+
+/* Plant decoration elements */
+.leaf-decoration {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background-image: url('/images/leaf-icon.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.15;
+  z-index: 0;
+}
+
+/* Animation keyframes */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes breathe {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}

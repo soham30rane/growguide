@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import '@/styles/auth.css';
+import '@/styles/agro.css';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({

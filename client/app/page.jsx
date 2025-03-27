@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import '@/styles/agro.css';
 import '@/styles/landing.css';
+import Image from 'next/image'; 
 
 const LandingPage = () => {
   return (
@@ -60,13 +61,21 @@ const LandingPage = () => {
             </Link>
           </div>
         </div>
-        <div className="landing-image">
-          <img src="/images/plant-hero.svg" alt="Plants growing illustration" />
-        </div>
+        <div className="landing-image max-w-lg w-full relative p-4">
+          <div className="absolute inset-0 bg-gradient-to-r from-green-50 to-teal-50 rounded-2xl transform rotate-2"></div>
+          <Image
+              src="/images/plant-hero.jpg"
+              alt="Plants growing"
+              width={660}
+              height={550}
+              className="relative rounded-xl shadow-2xl hover:scale-105 transition-transform duration-300 object-cover"
+              priority
+          />
+      </div>
       </div>
       
       <div className="landing-footer">
-        <p>© 2023 GrowGuide • Helping plants thrive, one leaf at a time</p>
+        <p>© 2025 GrowGuide • Helping plants thrive, one leaf at a time</p>
       </div>
     </div>
   );

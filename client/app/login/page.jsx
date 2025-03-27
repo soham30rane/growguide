@@ -36,7 +36,7 @@ const LoginPage = () => {
     try {
       let response = await loginAction(formData);
       if (response.success) {
-        router.push("/dashboard");
+        // router.push("/dashboard");
       } else {
         setErrors(response.success);
         setErrorDialog(true); // Show error dialog

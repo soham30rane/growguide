@@ -32,7 +32,7 @@ async def login(req: loginReqMod):
             "roles": user["roles"]
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An error occurred during login: {str(e)}")
+        return {"error": True, "message": f"An error occurred during login: {str(e)}"}
 
 @router.post("/register", response_model=userResMod)
 async def register(req: registerReqMod):
@@ -67,4 +67,4 @@ async def register(req: registerReqMod):
             "roles": req.roles
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An error occurred during registration: {str(e)}")
+        return {"error": True, "message": f"An error occurred during registration: {str(e)}"}

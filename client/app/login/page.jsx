@@ -24,19 +24,12 @@ const LoginPage = () => {
     });
   };
 
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.phone) newErrors.phone = 'Phone Number is required';
-    if (!formData.password) newErrors.password = 'Password is required';
-    return newErrors;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       let response = await loginAction(formData);
       if (response.success) {
-        router.push("/dashboard");
+        // router.push("/dashboard");
       } else {
         setErrors(response.success);
         setErrorDialog(true); // Show error dialog

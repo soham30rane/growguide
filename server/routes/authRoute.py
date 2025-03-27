@@ -24,8 +24,8 @@ async def login(req: loginReqMod):
             "error": False,
             "token": user["uid"],
             "username": user["username"],
-            "latitude": str(user["latitude"]),
-            "longitude": str(user["longitude"]),
+            "latitude": user["latitude"],
+            "longitude": user["longitude"],
             "address": user["address"],
             "language_preference": user["language_preference"],
             "description": user["description"],
@@ -37,6 +37,7 @@ async def login(req: loginReqMod):
 @router.post("/register", response_model=userResMod)
 async def register(req: registerReqMod):
     try:
+        print("printing data", req)
         response = supabase.table("users").select("uid").eq("phone", req.phone).execute()
         if response.data:
             return {"error": True, "token": "", "username": "", "latitude": "", "longitude": "", "address": "", "language_preference": "", "description": "", "roles": ""}

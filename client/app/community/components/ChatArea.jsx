@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import ChatMessage from './ChatMessage';
-import ChatInput from './ChatInput';
+
+
 
 const ChatArea = ({ 
   currentChat, 
@@ -17,36 +17,7 @@ const ChatArea = ({
   }, [currentChat]);
 
   // Empty state when no chat is selected
-  if (!currentChat) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center bg-gray-50/90 dark:bg-gray-900/90 backdrop-blur-sm">
-        <div className="flex flex-col items-center max-w-md px-8 py-12 text-center">
-          <div className="relative">
-            <span className="text-7xl">💬</span>
-            <span className="absolute -bottom-2 -right-2 text-3xl">🌱</span>
-          </div>
-          <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mt-6 mb-3">
-            Select a conversation
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            Choose a contact from the list to start chatting about your agricultural questions and insights
-          </p>
-          <div className="grid grid-cols-2 gap-3 w-full">
-            <div className="bg-white/60 dark:bg-gray-800/60 p-3 rounded-lg border border-green-100 dark:border-green-900/30">
-              <div className="text-2xl mb-2">👩‍🔬</div>
-              <h4 className="font-medium text-gray-800 dark:text-gray-200">Expert Advice</h4>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Get professional guidance for your crops</p>
-            </div>
-            <div className="bg-white/60 dark:bg-gray-800/60 p-3 rounded-lg border border-green-100 dark:border-green-900/30">
-              <div className="text-2xl mb-2">☀️</div>
-              <h4 className="font-medium text-gray-800 dark:text-gray-200">Weather Alerts</h4>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Stay updated on conditions affecting your farm</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  
 
   // Format date for the header
   const getLastActiveDate = () => {
@@ -56,10 +27,10 @@ const ChatArea = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full relative">
+    <div className="flex flex-col w-full fixed">
       {/* Chat header */}
       <div className="p-4 border-b border-green-100 dark:border-green-800/50 flex items-center bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
-        <div className="relative">
+        <div className="relative ml-8">
           <div className="text-3xl bg-gray-100 dark:bg-gray-700 p-2 rounded-full">
             {activeUser?.avatar}
           </div>
@@ -68,7 +39,7 @@ const ChatArea = ({
           )}
         </div>
         
-        <div className="ml-3 flex-1">
+        <div className=" flex-1">
           <div className="flex justify-between items-center">
             <div>
               <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center">
@@ -109,38 +80,7 @@ const ChatArea = ({
         </div>
       </div>
       
-      {/* Messages area */}
-      <div className="flex-1 p-4 overflow-y-auto bg-gray-50/70 dark:bg-gray-900/70 backdrop-blur-sm">
-        {/* Date indicator */}
-        <div className="text-center mb-6 sticky top-0 z-10">
-          <span className="inline-block px-3 py-1 bg-green-100/80 dark:bg-green-900/80 text-green-800 dark:text-green-200 text-xs rounded-full backdrop-blur-sm">
-            {getLastActiveDate()}
-          </span>
-        </div>
-        
-        {currentChat.messages.map((msg, index) => (
-          <ChatMessage 
-            key={msg.id} 
-            message={msg} 
-            isFirstInSequence={
-              index === 0 || 
-              currentChat.messages[index - 1].sender !== msg.sender
-            }
-            isLastInSequence={
-              index === currentChat.messages.length - 1 || 
-              currentChat.messages[index + 1].sender !== msg.sender
-            }
-          />
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
-      
-      {/* Message input */}
-      <ChatInput 
-        message={message}
-        setMessage={setMessage}
-        handleSendMessage={handleSendMessage}
-      />
+   
     </div>
   );
 };

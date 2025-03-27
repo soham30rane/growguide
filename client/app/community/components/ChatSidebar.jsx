@@ -19,7 +19,7 @@ const ChatSidebar = ({
   });
 
   return (
-    <div className="w-full md:w-1/3 lg:w-1/4 bg-gray-50/90 dark:bg-gray-900/90 border-r border-green-100 dark:border-green-800/50 flex flex-col h-full backdrop-blur-sm relative overflow-hidden">
+    <div className="w-full bg-gray-50/90 dark:bg-gray-900/90 border-r border-green-100 dark:border-green-800/50 flex flex-col h-full backdrop-blur-sm relative overflow-hidden">
       {/* Decorative plant element */}
       <div className="absolute bottom-0 right-0 w-24 h-24 opacity-10 dark:opacity-5 pointer-events-none">
         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">

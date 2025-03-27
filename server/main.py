@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from routes.authRoute import router as auth_router
 from routes.plantRoute import router as plant_router
+from routes.blogRoute import router as blog_router
 
 load_dotenv()  # Ensure this is called to load environment variables
 
@@ -19,6 +20,7 @@ app.add_middleware(
 
 app.include_router(auth_router, prefix="/auth")
 app.include_router(plant_router, prefix="/plant")
+app.include_router(blog_router, prefix="/blog")
 
 if __name__ == "__main__":
     import uvicorn

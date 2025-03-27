@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from supabase import create_client, Client
 import os
 import uuid
-from models import blogReqMod, blogResMod 
+from models import blogReqMod, blogResMod, getBlogsResMod 
 router = APIRouter()
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
@@ -21,7 +21,6 @@ async def create_blog(req: blogReqMod):
             "blog_content": req.blogContent
         }).execute()
 
-        # Insert each tag into the blogtag table
         for tag in req.tags:
             supabase.table("blogtag").insert({
                 "blogid": blog_id,
@@ -31,3 +30,20 @@ async def create_blog(req: blogReqMod):
         return {"error": False}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred during blog creation: {str(e)}")
+
+@router.get("/get-blogs", response_model=getBlogsResMod)
+async def get_blogs():
+    try:
+        blogs_response = supabase.table("blog").select("*").execute()
+        blogs = blogs_response.data
+
+        if not blogs:
+            return {"blogs": []}
+
+        for blog in blogs:
+            tags_response = supabase.table("blogtag").select("tag").eq("blogid", blog["blogid"]).execute()
+            blog["tags"] = [tag["tag"] for tag in tags_response.data]
+
+        return {"blogs": blogs}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while fetching blogs: {str(e)}")

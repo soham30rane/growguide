@@ -1,5 +1,8 @@
-"use client"
-import React, { useState } from 'react';
+"use client";
+import React, { useState } from "react";
+import Cookies from "js-cookie";
+import createBlogAction from "../../actions/createBlog";
+import { useRouter } from "next/navigation";
 
 const availableTags = [
   "Organic Farming",
@@ -11,9 +14,12 @@ const availableTags = [
 ];
 
 const CreateBlogPage = () => {
-  const [blogTitle, setBlogTitle] = useState('');
-  const [blogContent, setBlogContent] = useState('');
+  const [blogTitle, setBlogTitle] = useState("");
+  const [blogContent, setBlogContent] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
+  const [error, setError] = useState(false);
+
+  const router = useRouter();
 
   const handleTagToggle = (tag) => {
     setSelectedTags((prevTags) =>
@@ -23,14 +29,22 @@ const CreateBlogPage = () => {
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newBlog = {
-      title: blogTitle,
-      content: blogContent,
+      uid:Cookies.get("token"), // Replace with actual user ID
+      blogTitle,
+      blogContent,
       tags: selectedTags,
     };
-    console.log("Blog Submitted:", newBlog);
-    // Add logic to save the blog (e.g., API call)
+    const response = await createBlogAction(newBlog);
+    if (!response.success) {
+      setError(true);
+
+    } else {
+      setError(false);
+      console.log("Blog created successfully!");
+      router.push("/blog");
+    }
   };
 
   return (
@@ -39,6 +53,11 @@ const CreateBlogPage = () => {
         <h1 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-green-600 to-emerald-700 bg-clip-text text-transparent dark:from-green-400 dark:to-emerald-300">
           Create a New Blog
         </h1>
+        {error && (
+          <div className="mb-4 text-red-600 dark:text-red-400">
+            An error occurred while creating the blog. Please try again.
+          </div>
+        )}
         <div className="mb-4">
           <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
             Blog Title

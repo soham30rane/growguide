@@ -28,7 +28,6 @@ const RegisterPage = () => {
       ...formData,
       [name]: value,
     });
-    console.log(formData);
   };
 
   const validateStep = () => {

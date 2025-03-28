@@ -13,6 +13,8 @@ const ChatPage = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [filter, setFilter] = useState('all')
   const [sidebarOpen, setSidebarOpen] = useState(true)
+
+  const [roomId, setRoomId] = useState('testinging')
   
   // Set sidebar closed by default on mobile
   useEffect(() => {
@@ -119,7 +121,9 @@ const ChatPage = () => {
           />
           </div>
           <div className="overflow-scroll mt-8">
-        <Chats/>
+        <Chats
+          roomId={roomId}
+        />
         </div>
         </div>
       </div>

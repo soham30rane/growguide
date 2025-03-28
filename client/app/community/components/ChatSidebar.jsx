@@ -61,11 +61,12 @@ const ChatSidebar = ({
         <div className="flex mt-3 space-x-2 overflow-x-auto pb-2 scrollbar-thin">
           {[
             { id: 'all', label: 'All', icon: '🔄' },
-            { id: 'expert', label: 'Experts', icon: '👩‍🔬' },
-            { id: 'farmer', label: 'Farmers', icon: '🧑‍🌾' },
+            { id: 'Expert/Consultant', label: 'Experts', icon: '👩‍🔬' },
+            { id: 'Farmer', label: 'Farmers', icon: '🧑‍🌾' },
             { id: 'support', label: 'Support', icon: '🛟' },
-            { id: 'service', label: 'Services', icon: '🤖' },
-            { id: 'group', label: 'Groups', icon: '👥' }
+            { id: 'Service Provider', label: 'Services', icon: '🤖' },
+            { id: 'group', label: 'Groups', icon: '👥' },
+            
           ].map((category) => (
             <button
               key={category.id}

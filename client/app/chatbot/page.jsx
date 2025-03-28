@@ -9,6 +9,7 @@ export default function FarmingChatbot() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [mobileView, setMobileView] = useState(false);
     const messagesEndRef = useRef(null);
     
     // State for sidebar and conversation management

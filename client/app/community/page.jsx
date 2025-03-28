@@ -135,12 +135,16 @@ const ChatPage = () => {
   };
 
   const handleCreateGroup = async () => {
+    console.log('Creating group:', groupName, phoneTags);
     const result = await createGroup(groupName, phoneTags);
     if (result.success) {
       alert(result.message);
       setIsModalOpen(false);
       setGroupName('');
       setPhoneTags([]);
+
+      testinf()
+
     } else {
       alert(result.message);
     }

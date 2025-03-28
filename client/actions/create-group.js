@@ -2,8 +2,9 @@
 
 export default async function createGroup(groupName, phoneNumbers) {
   try {
+    console.log("creating group, phoneNumbers: ", phoneNumbers);
     // Step 1: Get UIDs from phone numbers
-    let phoneResponse = await fetch(`http://localhost:8000/auth/get-phone`, {
+    let phoneResponse = await fetch(`http://localhost:8000/auth/get-uid`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -16,6 +17,8 @@ export default async function createGroup(groupName, phoneNumbers) {
     }
 
     const uids = phoneData.map((entry) => entry.uid);
+
+    console.log("creating group, uids: ", uids);
 
     // Step 2: Create the group
     let groupResponse = await fetch(`http://localhost:8000/group/create-group`, {

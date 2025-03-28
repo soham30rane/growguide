@@ -6,6 +6,18 @@ import '@/styles/agro.css';
 import '@/styles/auth.css';
 import Image from 'next/image';
 import loginAction from '@/actions/login';
+import { getCookie, setCookie, deleteCookie } from 'cookies-next';
+
+// Map of languages to Google Translate codes
+const languageMap = {
+  'English': '/auto/en',
+  'Hindi': '/auto/hi',
+  'Marathi': '/auto/mr',
+  'Telugu': '/auto/te',
+  'Kannada': '/auto/kn',
+  'Gujarati': '/auto/gu',
+  'Punjabi': '/auto/pa'
+};
 
 const LoginPage = () => {
   const router = useRouter();
@@ -29,7 +41,37 @@ const LoginPage = () => {
     try {
       let response = await loginAction(formData);
       if (response.success) {
-        router.push("/dashboard");
+        // Set language preference on client side too
+        const languagePref = response.language_preference;
+        
+        // Apply the translation settings on client side
+        if (languagePref) {
+          if (languagePref === 'English') {
+            // For English, remove the cookie to show original content
+            deleteCookie('googtrans', { path: '/', domain: window.location.hostname });
+            deleteCookie('googtrans', { path: '/' });
+            
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname;
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          } else if (languageMap[languagePref]) {
+            // For other languages, set the cookie
+            const cookieOptions = { 
+              path: '/',
+              domain: window.location.hostname
+            };
+            
+            setCookie('googtrans', decodeURI(languageMap[languagePref]), cookieOptions);
+            
+            document.cookie = `googtrans=${encodeURIComponent(languageMap[languagePref])}; path=/; domain=${window.location.hostname}`;
+            document.cookie = `googtrans=${encodeURIComponent(languageMap[languagePref])}; path=/`;
+          }
+          
+          // Refresh the translation by redirecting to dashboard with reload
+          window.location.href = "/dashboard";
+        } else {
+          // No language preference, just redirect
+          router.push("/dashboard");
+        }
       } else {
         setErrors(response.success);
         setErrorDialog(true); // Show error dialog

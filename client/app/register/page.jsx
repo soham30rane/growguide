@@ -7,6 +7,7 @@ import '@/styles/agro.css';
 import Image from 'next/image';
 import registerAction from '@/actions/register';
 import { useRouter } from "next/navigation";
+import { getCookie, setCookie, deleteCookie } from 'cookies-next';
 
 const RegisterPage = () => {
   const router = useRouter();
@@ -23,6 +24,17 @@ const RegisterPage = () => {
     longitude: 77.594566,
   });
   const [errors, setErrors] = useState({});
+
+  // Map of languages to Google Translate codes
+  const languageMap = {
+    'English': '/auto/en',
+    'Hindi': '/auto/hi',
+    'Marathi': '/auto/mr',
+    'Telugu': '/auto/te',
+    'Kannada': '/auto/kn',
+    'Gujarati': '/auto/gu',
+    'Punjabi': '/auto/pa'
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -126,9 +138,32 @@ const RegisterPage = () => {
                       key={lang}
                       className={`language-button ${formData.language_preference === lang ? 'selected' : ''}`}
                       onClick={() => {
-                        // setFormData({ ...formData, language_preference: lang })
                         handleChange({ target: { name: 'language_preference', value: lang } });
-                        // console.log("hello", lang, );
+                        
+                        // For English, remove the cookie to show original content
+                        if (lang === 'English') {
+                          deleteCookie('googtrans', { path: '/', domain: window.location.hostname });
+                          deleteCookie('googtrans', { path: '/' });
+                          
+                          // Also try to expire the cookie
+                          document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname;
+                          document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                        } 
+                        // For other languages, set the cookie as before
+                        else if (languageMap[lang]) {
+                          const cookieOptions = { 
+                            path: '/',
+                            domain: window.location.hostname
+                          };
+                          
+                          setCookie('googtrans', decodeURI(languageMap[lang]), cookieOptions);
+                          
+                          document.cookie = `googtrans=${encodeURIComponent(languageMap[lang])}; path=/; domain=${window.location.hostname}`;
+                          document.cookie = `googtrans=${encodeURIComponent(languageMap[lang])}; path=/`;
+                        }
+                        
+                        // Reload page to apply translation changes
+                        window.location.reload();
                       }}
                     >
                       {lang}

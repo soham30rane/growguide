@@ -11,7 +11,7 @@ load_dotenv()  # Ensure this is called to load environment variables
 
 app = FastAPI()
 
-allowed_origin = ["http://localhost:3000"]
+allowed_origin = ["https://growguide-eight.vercel.app/", "http://localhost:3000"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origin,

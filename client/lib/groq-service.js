@@ -199,3 +199,53 @@ export async function generateChatResponse(userMessage, chatHistory = []) {
     return "I'm having trouble connecting to my knowledge base right now. Please try again later, or ask about crops, fertilizers, government schemes, water management, or pest control.";
   }
 }
+
+/**
+ * Generate output text based on any prompt using Groq API
+ * @param {string} prompt - The prompt to send to the model
+ * @returns {Promise<string>} - AI-generated response
+ */
+export async function generate_output(prompt) {
+  try {
+    const apiKey = process.env.NEXT_PUBLIC_GROQ_API_KEY;
+    
+    if (!apiKey) {
+      console.warn("No Groq API key found. Using mock response.");
+      return "This is a mock response for: " + prompt;
+    }
+    
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "llama3-8b-8192",
+        messages: [
+          {
+            role: "system",
+            content: "You are a helpful agricultural assistant. Generate concise, practical information."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 500
+      })
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error?.message || "Failed to generate response");
+    }
+    
+    const data = await response.json();
+    return data.choices[0].message.content;
+  } catch (error) {
+    console.error("Error generating output:", error);
+    return "I'm having trouble generating content based on your prompt. Please try again later.";
+  }
+}

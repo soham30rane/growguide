@@ -6,8 +6,10 @@ import '@/styles/auth.css';
 import '@/styles/agro.css';
 import Image from 'next/image';
 import registerAction from '@/actions/register';
+import { useRouter } from 'next/navigation';
 
 const RegisterPage = () => {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     language_preference: '',
@@ -82,6 +84,7 @@ const RegisterPage = () => {
           longitude: formData.longitude, // Use longitude from formData
         });
         if (response.success) {
+          // router.push('/dashboard');
           console.log('Registration successful:', response);
           // Redirect to login or dashboard
         } else {

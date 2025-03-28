@@ -26,9 +26,8 @@ function Example() {
   );
 }
 
-export default function Chats({ roomId }: { roomId: string }) {
-  // console.log("roomId_input", roomId_input);
-  // const roomId = roomId_input;
+export default function Chats() {
+  const roomId = useExampleRoomId("liveblocks:examples:nextjs-comments");
 
   return (
     <RoomProvider id={roomId}>

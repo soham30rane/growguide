@@ -10,6 +10,7 @@ export default function FarmingChatbot() {
     ]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [mobileView, setMobileView] = useState(false);
     const messagesEndRef = useRef(null);
 
     // Fallback responses in case API fails
@@ -21,6 +22,22 @@ export default function FarmingChatbot() {
         pests: "Integrated Pest Management (IPM) combines biological controls, crop rotation, and resistant crop varieties to minimize pesticide use. For organic solutions, consider neem oil and beneficial insects.",
         default: "I'm not sure about that. Could you ask about crops, fertilizers, government schemes, water management, or pest control?"
     };
+
+    // Check screen size
+    useEffect(() => {
+        const handleResize = () => {
+            setMobileView(window.innerWidth < 768);
+        };
+        
+        // Run once on mount
+        handleResize();
+        
+        // Add event listener
+        window.addEventListener('resize', handleResize);
+        
+        // Cleanup
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

@@ -80,7 +80,7 @@ const ChatPage = () => {
     oneToOneChat.chats.map((chat) => {
       const newData = {
         // id: sort 2 id and append,
-        id : (current_user_id > chat.uid, chat.uid + current_user_id) ? chat.uid + current_user_id : current_user_id + chat.uid,
+        id : (current_user_id + chat.uid > chat.uid + current_user_id) ? chat.uid + current_user_id : current_user_id + chat.uid,
         name: chat.username,
         role: chat.username,
         avatar: (chat.role === "Farmer") ? "🧑‍🌾" : ((chat.role === "Expert/Consultant") 

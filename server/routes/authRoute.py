@@ -68,3 +68,23 @@ async def register(req: registerReqMod):
         }
     except Exception as e:
         return {"error": True, "message": f"An error occurred during registration: {str(e)}"}
+
+@router.post("/get-phone")
+async def get_phone(uids: list[str]):
+    try:
+        response = supabase.table("users").select("uid, phone").in_("uid", uids).execute()
+        if not response.data:
+            raise HTTPException(status_code=404, detail="No users found")
+        return [{"uid": user["uid"], "phone": user["phone"]} for user in response.data]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+
+@router.post("/get-uid")
+async def get_uid(phones: list[str]):
+    try:
+        response = supabase.table("users").select("phone, uid").in_("phone", phones).execute()
+        if not response.data:
+            raise HTTPException(status_code=404, detail="No users found")
+        return [{"phone": user["phone"], "uid": user["uid"]} for user in response.data]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")

@@ -16,6 +16,7 @@
     "@liveblocks/node": "^2.22.1",
     "@liveblocks/react": "^2.22.1",
     "@liveblocks/react-ui": "^2.22.1",
+    "@pathofdev/react-tag-input": "^1.0.7",
     "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

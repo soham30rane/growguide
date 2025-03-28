@@ -12,7 +12,7 @@ const ChatPage = () => {
   const [message, setMessage] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [filter, setFilter] = useState('all')
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   
   // Set sidebar closed by default on mobile
   useEffect(() => {
@@ -50,7 +50,7 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-gradient-to-br from-green-50 via-lime-50 to-emerald-100 dark:from-[#1e3b2f] dark:via-[#1e3b2f] dark:to-[#1e3b2f] flex flex-col">
+    <div className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-green-50 via-lime-50 to-emerald-100 dark:from-[#1e3b2f] dark:via-[#1e3b2f] dark:to-[#1e3b2f] flex flex-col">
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden opacity-20 dark:opacity-10">
         <div className="absolute -top-24 -left-24 w-48 h-48 rounded-full bg-green-300 dark:bg-green-800 blur-3xl"></div>
@@ -63,8 +63,8 @@ const ChatPage = () => {
         ></div>
       </div>
 
-      {/* Main chat container - takes full viewport */}
-      <div className="relative z-10 flex h-full w-full overflow-hidden bg-white/90 dark:bg-gray-800/90 shadow-2xl backdrop-blur-sm border border-green-100 dark:border-green-900 rounded-lg md:m-4">
+      {/* Main chat container - changed to h-screen from h-full */}
+      <div className="relative z-10 flex h-screen w-full overflow-hidden bg-white/90 dark:bg-gray-800/90 shadow-2xl backdrop-blur-sm border border-green-100 dark:border-green-900 rounded-lg">
         {/* Sidebar toggle button - visible on all screens */}
         <button 
           onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -106,9 +106,9 @@ const ChatPage = () => {
           </div>
         </div>
         
-        {/* Chat content area - no margin change */}
-        <div className="flex flex-col w-full ">
-<div className='z-10 '>
+        {/* Chat content area - ensure full height with h-screen */}
+        <div className="flex flex-col w-full h-screen overflow-hidden">
+          {/* Chat header - fixed at top */}
           <ChatArea 
             currentChat={currentChat}
             activeUser={activeUser}
@@ -117,10 +117,24 @@ const ChatPage = () => {
             handleSendMessage={handleSendMessage}
             sidebarOpen={sidebarOpen}
           />
+          
+          {/* Scrollable chat content - adjusted padding to work with fixed composer */}
+          <div className="flex-1 overflow-y-auto pt-4 flex flex-col">
+            {/* Empty state when no chats are available */}
+            {!currentChat?.messages?.length && (
+              <div className="flex-1 flex flex-col items-center justify-center text-center p-8 text-gray-500 dark:text-gray-400">
+                <div className="text-5xl mb-4">💬</div>
+                <h3 className="text-xl font-medium mb-2">No messages yet</h3>
+                <p className="max-w-md">
+                  Start a conversation with {activeUser?.name || "this contact"} by sending a message or posting in the community forums below.
+                </p>
+              </div>
+            )}
+            
+            <div className="flex-1">
+              <Chats/>
+            </div>
           </div>
-          <div className="overflow-scroll mt-8">
-        <Chats/>
-        </div>
         </div>
       </div>
     </div>

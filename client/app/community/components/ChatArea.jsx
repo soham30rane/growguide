@@ -1,7 +1,5 @@
 import React, { useRef, useEffect } from 'react';
 
-
-
 const ChatArea = ({ 
   currentChat, 
   activeUser, 
@@ -16,20 +14,17 @@ const ChatArea = ({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [currentChat]);
 
-  // Empty state when no chat is selected
-  
-
   // Format date for the header
   const getLastActiveDate = () => {
-    if (!currentChat.messages.length) return '';
+    if (!currentChat?.messages?.length) return '';
     const lastMessage = currentChat.messages[currentChat.messages.length - 1];
     return lastMessage.date;
   };
 
   return (
-    <div className="flex flex-col w-full fixed">
+    <div className="sticky top-0 z-20 w-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
       {/* Chat header */}
-      <div className="p-4 border-b border-green-100 dark:border-green-800/50 flex items-center bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
+      <div className="p-4 border-b border-green-100 dark:border-green-800/50 flex items-center">
         <div className="relative ml-8">
           <div className="text-3xl bg-gray-100 dark:bg-gray-700 p-2 rounded-full">
             {activeUser?.avatar}
@@ -39,7 +34,7 @@ const ChatArea = ({
           )}
         </div>
         
-        <div className=" flex-1">
+        <div className="flex-1">
           <div className="flex justify-between items-center">
             <div>
               <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center">
@@ -79,8 +74,6 @@ const ChatArea = ({
           </div>
         </div>
       </div>
-      
-   
     </div>
   );
 };

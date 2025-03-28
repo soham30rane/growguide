@@ -6,8 +6,10 @@ import '@/styles/auth.css';
 import '@/styles/agro.css';
 import Image from 'next/image';
 import registerAction from '@/actions/register';
+import { useRouter } from "next/navigation";
 
 const RegisterPage = () => {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     language_preference: '',
@@ -84,7 +86,7 @@ const RegisterPage = () => {
         });
         if (response.success) {
           console.log('Registration successful:', response);
-          // Redirect to login or dashboard
+          router.push("/dashboard");
         } else {
           console.log('Registration failed');
         }
@@ -192,7 +194,7 @@ const RegisterPage = () => {
                     name="roles"
                     value={formData.roles}
                     onChange={handleChange}
-                    className={errors.roles ? 'error' : ''}
+                    className={errors.roles ? 'error w-full' : 'w-full'}
                   >
                     <option value="">Select a role</option>
                     <option value="Farmer">Farmer</option>
@@ -210,7 +212,7 @@ const RegisterPage = () => {
                     placeholder="Describe your role or expertise (e.g., type of crops)"
                     value={formData.description}
                     onChange={handleChange}
-                    className={errors.description ? 'error' : ''}
+                    className={errors.description ? 'error w-full' : 'w-full'}
                   />
                   {errors.description && <p className="error-text">{errors.description}</p>}
                 </div>

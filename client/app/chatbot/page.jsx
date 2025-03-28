@@ -9,6 +9,7 @@ export default function FarmingChatbot() {
     ]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [mobileView, setMobileView] = useState(false);
     const messagesEndRef = useRef(null);
 
     // Sample responses - in a real app, these would come from an API
@@ -20,6 +21,22 @@ export default function FarmingChatbot() {
         pests: "Integrated Pest Management (IPM) combines biological controls, crop rotation, and resistant crop varieties to minimize pesticide use. For organic solutions, consider neem oil and beneficial insects.",
         default: "I'm not sure about that. Could you ask about crops, fertilizers, government schemes, water management, or pest control?"
     };
+
+    // Check screen size
+    useEffect(() => {
+        const handleResize = () => {
+            setMobileView(window.innerWidth < 768);
+        };
+        
+        // Run once on mount
+        handleResize();
+        
+        // Add event listener
+        window.addEventListener('resize', handleResize);
+        
+        // Cleanup
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -62,87 +79,91 @@ export default function FarmingChatbot() {
     };
 
     return (
-        <div className="mx-auto bg-gray-50 min-h-screen flex flex-col relative">
-            {/* Header */}
-            <div className="bg-green-700 p-4 shadow-md">
-                <div className="flex items-center justify-center gap-2 max-w-4xl mx-auto">
-                    <RiPlantFill className="text-white text-2xl" />
-                    <h1 className="text-xl font-bold text-white">GrowGuide Assistant</h1>
+        <div className="min-h-screen bg-gray-50 flex">
+            {/* Main content */}
+            <div className="flex-1 flex flex-col relative">
+                {/* Header */}
+                <div className="bg-green-700 p-4 shadow-md">
+                    <div className="flex items-center justify-between max-w-4xl mx-auto">
+                        <h1 className="text-xl font-bold text-white">GrowGuide Assistant</h1>
+                        <div className="md:flex items-center gap-2 hidden">
+                            <RiPlantFill className="text-white text-2xl" />
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            {/* Chat area */}
-            <div className="flex-1 overflow-y-auto p-4 pb-28">
-                <div className="max-w-4xl mx-auto">
-                    {messages.map((message, index) => (
-                        <div 
-                            key={index} 
-                            className={`flex items-start mb-4 ${
-                                message.sender === 'user' ? 'justify-end' : 'justify-start'
-                            }`}
-                        >
-                            {message.sender === 'bot' && (
+                
+                {/* Chat area */}
+                <div className="flex-1 overflow-y-auto p-4 pb-28">
+                    <div className="max-w-4xl mx-auto">
+                        {messages.map((message, index) => (
+                            <div 
+                                key={index} 
+                                className={`flex items-start mb-4 ${
+                                    message.sender === 'user' ? 'justify-end' : 'justify-start'
+                                }`}
+                            >
+                                {message.sender === 'bot' && (
+                                    <div className="w-8 h-8 rounded-full bg-green-700 flex items-center justify-center mr-2 flex-shrink-0 shadow-sm">
+                                        <RiPlantFill className="text-white text-sm" />
+                                    </div>
+                                )}
+                                
+                                <div 
+                                    className={`p-3 rounded-2xl max-w-[80%] shadow-sm ${
+                                        message.sender === 'user' 
+                                            ? 'bg-green-600 text-white rounded-tr-none' 
+                                            : 'bg-white text-gray-800 rounded-tl-none border border-gray-200'
+                                    }`}
+                                >
+                                    {message.text}
+                                </div>
+                                
+                                {message.sender === 'user' && (
+                                    <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center ml-2 flex-shrink-0 shadow-sm">
+                                        <FiUser className="text-green-800 text-sm" />
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                        
+                        {isLoading && (
+                            <div className="flex items-start mb-4">
                                 <div className="w-8 h-8 rounded-full bg-green-700 flex items-center justify-center mr-2 flex-shrink-0 shadow-sm">
                                     <RiPlantFill className="text-white text-sm" />
                                 </div>
-                            )}
-                            
-                            <div 
-                                className={`p-3 rounded-2xl max-w-[80%] shadow-sm ${
-                                    message.sender === 'user' 
-                                        ? 'bg-green-600 text-white rounded-tr-none' 
-                                        : 'bg-white text-gray-800 rounded-tl-none border border-gray-200'
-                                }`}
-                            >
-                                {message.text}
-                            </div>
-                            
-                            {message.sender === 'user' && (
-                                <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center ml-2 flex-shrink-0 shadow-sm">
-                                    <FiUser className="text-green-800 text-sm" />
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                    
-                    {isLoading && (
-                        <div className="flex items-start mb-4">
-                            <div className="w-8 h-8 rounded-full bg-green-700 flex items-center justify-center mr-2 flex-shrink-0 shadow-sm">
-                                <RiPlantFill className="text-white text-sm" />
-                            </div>
-                            <div className="bg-white p-3 rounded-2xl rounded-tl-none border border-gray-200 shadow-sm">
-                                <div className="flex space-x-2">
-                                    <div className="w-2 h-2 bg-green-600 rounded-full animate-bounce"></div>
-                                    <div className="w-2 h-2 bg-green-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                                    <div className="w-2 h-2 bg-green-600 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                                <div className="bg-white p-3 rounded-2xl rounded-tl-none border border-gray-200 shadow-sm">
+                                    <div className="flex space-x-2">
+                                        <div className="w-2 h-2 bg-green-600 rounded-full animate-bounce"></div>
+                                        <div className="w-2 h-2 bg-green-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                                        <div className="w-2 h-2 bg-green-600 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
-                    <div ref={messagesEndRef} />
+                        )}
+                        <div ref={messagesEndRef} />
+                    </div>
                 </div>
-            </div>
-            
-            {/* Input area */}
-            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg">
-                <div className="max-w-4xl mx-auto">
-                    <form onSubmit={handleSubmit} className="flex items-center gap-2">
-                        <input
-                            type="text"
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            placeholder="Ask about crops, schemes, or farming advice..."
-                            className="flex-1 p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 bg-gray-50"
-                        />
-                        <button 
-                            type="submit" 
-                            className="bg-green-700 hover:bg-green-800 text-white p-3 rounded-full transition-colors flex items-center justify-center shadow-sm disabled:opacity-70"
-                            disabled={isLoading}
-                        >
-                            <FiSend className="text-lg" />
-                        </button>
-                    </form>
-                    
+                
+                {/* Input area */}
+                <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg md:left-16 md:pb-4 pb-20">
+                    <div className="max-w-4xl mx-auto">
+                        <form onSubmit={handleSubmit} className="flex items-center gap-2">
+                            <input
+                                type="text"
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                placeholder="Ask about crops, schemes, or farming advice..."
+                                className="flex-1 p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 bg-gray-50"
+                            />
+                            <button 
+                                type="submit" 
+                                className="bg-green-700 hover:bg-green-800 text-white p-3 rounded-full transition-colors flex items-center justify-center shadow-sm disabled:opacity-70"
+                                disabled={isLoading}
+                            >
+                                <FiSend className="text-lg" />
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

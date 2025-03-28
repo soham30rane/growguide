@@ -18,7 +18,7 @@ export default function Sidebar({
   const navItems = [
     { name: 'Dashboard', icon: <RiDashboardLine size={24} />, href: '/dashboard', id: 'dashboard' },
     { name: 'Scan', icon: <FaLeaf size={24} />, href: '/plant-detector', id: 'crops' },
-    { name: 'Resources', icon: <RiBook2Line size={24} />, href: '/resources', id: 'resources' },
+    { name: 'Resources', icon: <RiBook2Line size={24} />, href: '/blog', id: 'blog' },
     { name: 'Chatbot', icon: <RiChat3Line size={24} />, href: '/chatbot', id: 'chatbot' },
     { name: 'Community', icon: <FiBarChart2 size={24} />, href: '/community', id: 'community' },
     { name: 'Settings', icon: <RiSettings4Line size={24} />, href: '/settings', id: 'settings' },

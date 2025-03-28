@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FiSend, FiUser } from 'react-icons/fi';
 import { RiPlantFill } from 'react-icons/ri';
+import { generateChatResponse } from '@/lib/groq-service';
 
 export default function FarmingChatbot() {
     const [messages, setMessages] = useState([
@@ -11,8 +12,8 @@ export default function FarmingChatbot() {
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef(null);
 
-    // Sample responses - in a real app, these would come from an API
-    const botResponses = {
+    // Fallback responses in case API fails
+    const fallbackResponses = {
         crops: "For crop advice, consider your local climate, soil type, and water availability. Popular crops this season include wheat, rice, maize, and pulses. Would you like specific information about any particular crop?",
         fertilizers: "For organic farming, consider compost, vermicompost, and green manures. For conventional farming, NPK fertilizers are commonly used. Always test your soil before applying fertilizers.",
         schemes: "Current government schemes include PM-KISAN, Soil Health Card Scheme, Pradhan Mantri Fasal Bima Yojana (crop insurance), and Kisan Credit Card. Would you like more details about any specific scheme?",
@@ -29,47 +30,64 @@ export default function FarmingChatbot() {
         scrollToBottom();
     }, [messages]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!input.trim()) return;
 
         // Add user message
-        setMessages([...messages, { text: input, sender: 'user' }]);
+        const updatedMessages = [...messages, { text: input, sender: 'user' }];
+        setMessages(updatedMessages);
         setIsLoading(true);
 
-        // Simulate response delay
-        setTimeout(() => {
-            let botResponse = botResponses.default;
+        try {
+            // Get AI response from Groq
+            const response = await generateChatResponse(input);
             
-            // Simple keyword matching
+            // Add bot response
+            setMessages(prev => [...prev, { text: response, sender: 'bot' }]);
+        } catch (error) {
+            console.error("Chat error:", error);
+            
+            // Fallback to simple keyword matching if API fails
+            let fallbackResponse = fallbackResponses.default;
             const lowercaseInput = input.toLowerCase();
+            
             if (lowercaseInput.includes('crop') || lowercaseInput.includes('plant') || lowercaseInput.includes('grow')) {
-                botResponse = botResponses.crops;
+                fallbackResponse = fallbackResponses.crops;
             } else if (lowercaseInput.includes('fertilizer') || lowercaseInput.includes('nutrient') || lowercaseInput.includes('soil')) {
-                botResponse = botResponses.fertilizers;
+                fallbackResponse = fallbackResponses.fertilizers;
             } else if (lowercaseInput.includes('scheme') || lowercaseInput.includes('government') || lowercaseInput.includes('subsidy') || lowercaseInput.includes('loan')) {
-                botResponse = botResponses.schemes;
+                fallbackResponse = fallbackResponses.schemes;
             } else if (lowercaseInput.includes('water') || lowercaseInput.includes('irrigation') || lowercaseInput.includes('rain')) {
-                botResponse = botResponses.water;
+                fallbackResponse = fallbackResponses.water;
             } else if (lowercaseInput.includes('pest') || lowercaseInput.includes('insect') || lowercaseInput.includes('disease')) {
-                botResponse = botResponses.pests;
+                fallbackResponse = fallbackResponses.pests;
             }
-
-            setMessages(prev => [...prev, { text: botResponse, sender: 'bot' }]);
+            
+            setMessages(prev => [...prev, { 
+                text: fallbackResponse + " (I'm currently using fallback responses due to connectivity issues.)", 
+                sender: 'bot' 
+            }]);
+        } finally {
             setIsLoading(false);
             setInput('');
-        }, 1000);
+        }
     };
 
     return (
         <div className="mx-auto bg-gray-50 min-h-screen flex flex-col relative">
             {/* Header */}
-            <div className="bg-green-700 p-4 shadow-md">
-                <div className="flex items-center justify-center gap-2 max-w-4xl mx-auto">
-                    <RiPlantFill className="text-white text-2xl" />
-                    <h1 className="text-xl font-bold text-white">GrowGuide Assistant</h1>
-                </div>
-            </div>
+            {/* Updated header with forced white text */}
+<div className="bg-green-700 p-4 shadow-md">
+    <div className="flex items-center justify-center gap-2 max-w-4xl mx-auto">
+        <span className="text-white" style={{ color: 'white' }}>
+            <RiPlantFill className="!text-white text-2xl" style={{ color: 'white' }} />
+        </span>
+        <h1 className="text-xl font-bold !text-white" style={{ color: 'white' }}>
+            GrowGuide Assistant
+        </h1>
+    </div>
+</div>
             
             {/* Chat area */}
             <div className="flex-1 overflow-y-auto p-4 pb-28">
@@ -142,7 +160,6 @@ export default function FarmingChatbot() {
                             <FiSend className="text-lg" />
                         </button>
                     </form>
-                    
                 </div>
             </div>
         </div>

@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 
 export default async function registerAction(formData) {
   console.log('Registering user:', formData);
+  console.log('Registering user:', JSON.stringify(formData));
   try {
     let res = await fetch("http://localhost:8000/auth/register", {
       method: 'POST',

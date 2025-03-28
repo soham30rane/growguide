@@ -136,3 +136,66 @@ export async function generateDiseaseReport(diseaseName) {
   With proper treatment, your ${plantName} should recover within a few weeks. Continue monitoring for any signs of disease spread.`;
     }
   }
+
+/**
+ * Generate farming assistant responses using Groq API
+ * @param {string} userMessage - The user's question about farming
+ * @returns {Promise<string>} - AI-generated response
+ */
+export async function generateChatResponse(userMessage, chatHistory = []) {
+  try {
+    const apiKey = process.env.NEXT_PUBLIC_GROQ_API_KEY;
+    
+    if (!apiKey) {
+      throw new Error("Groq API key is not defined");
+    }
+    
+    // Format chat history for the API
+    const messages = [
+      {
+        role: "system",
+        content: "You are GrowGuide Assistant, a helpful farming expert specializing in agricultural advice for small and medium-scale farmers. Keep responses friendly, practical, and concise (under 150 words). Include region-specific advice when possible and prioritize sustainable farming practices. Always remain within your expertise on agriculture, farming techniques, plant science, and agricultural policies."
+      }
+    ];
+    
+    // Add chat history (up to 5 previous exchanges)
+    const recentHistory = chatHistory.slice(-10);
+    recentHistory.forEach(msg => {
+      messages.push({
+        role: msg.sender === 'user' ? 'user' : 'assistant',
+        content: msg.text
+      });
+    });
+    
+    // Add the current user message
+    messages.push({
+      role: "user",
+      content: userMessage
+    });
+    
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "llama3-8b-8192",
+        messages: messages,
+        temperature: 0.7,
+        max_tokens: 500
+      })
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error?.message || "Failed to generate response");
+    }
+    
+    const data = await response.json();
+    return data.choices[0].message.content;
+  } catch (error) {
+    console.error("Error generating chat response:", error);
+    return "I'm having trouble connecting to my knowledge base right now. Please try again later, or ask about crops, fertilizers, government schemes, water management, or pest control.";
+  }
+}

@@ -7,7 +7,8 @@ const ChatSidebar = ({
   filter, 
   setFilter, 
   activeChat, 
-  setActiveChat 
+  setActiveChat,
+  setRoomId,
 }) => {
   // Filter users based on search and category
   const filteredUsers = users.filter(user => {
@@ -17,6 +18,12 @@ const ChatSidebar = ({
     if (filter === 'all') return matchesSearch;
     return matchesSearch && user.category === filter;
   });
+
+  const handleOnClick = (id) => {
+    setActiveChat(id);
+    setRoomId(id);
+    console.log('Clicked on user with ID:', id);
+  }
 
   return (
     <div className="w-full bg-gray-50/90 dark:bg-gray-900/90 border-r border-green-100 dark:border-green-800/50 flex flex-col h-full backdrop-blur-sm relative overflow-hidden">
@@ -88,7 +95,7 @@ const ChatSidebar = ({
           filteredUsers.map(user => (
             <div 
               key={user.id}
-              onClick={() => setActiveChat(user.id)}
+              onClick={() => handleOnClick(user.id)}
               className={`p-4 hover:bg-white/60 dark:hover:bg-gray-800/60 flex items-start cursor-pointer relative transition-all duration-300
                          ${activeChat === user.id 
                             ? 'bg-white dark:bg-gray-800 border-l-4 border-green-600 shadow-sm' 

@@ -4,8 +4,15 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import ChatSidebar from './components/ChatSidebar'
 import ChatArea from './components/ChatArea'
-import { users, chats } from './data/dummyData'
+import { chats } from './data/dummyData'
 import Chats from './components/Chats'
+import Cookies from "js-cookie";
+
+import getGroup from '@/actions/group'
+import createGroup from '@/actions/create-group';
+import Modal from '@/components/Modal';
+import ReactTagInput from "@pathofdev/react-tag-input"; // Install this library for tag input
+import "@pathofdev/react-tag-input/build/index.css"; // Import styles for the tag input
 
 const ChatPage = () => {
   const [activeChat, setActiveChat] = useState(0)
@@ -13,7 +20,63 @@ const ChatPage = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [filter, setFilter] = useState('all')
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  
+  const [users, setUsers] = useState([])
+
+  const [roomId, setRoomId] = useState('testinging')
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [groupName, setGroupName] = useState('');
+  const [phoneTags, setPhoneTags] = useState([]);
+
+  useEffect(() => {}, [roomId])
+
+  const testinf = async () => {
+    const res = await getGroup(Cookies.get("token"))
+    console.log("get Group",res)
+
+    const data = [
+      {
+        id: "0000",
+        name: 'John Harvest',
+        role: 'John Harvest',
+        avatar: '👨‍🌾',
+        category: 'expert',
+        badge: 'expert',
+      },
+      {
+        id: "11111",
+        name: 'Sarah Fields',
+        role: 'Sarah Fields',
+        avatar: '👩‍🌾',
+        category: 'farmer',
+        badge: 'farmer',
+      },
+      {
+        id: "222222",
+        name: 'GrowWise Support',
+        role: 'GrowWise Support',
+        avatar: '🌱',
+        category: 'support',
+        badge: 'support',
+      },
+    ]
+
+    res.groups.map((group) => {
+      data.push({
+        id: group.roomid,
+        name: group.groupname,
+        role: group.groupname,
+        avatar: "👥",
+        category: 'group',
+        badge: 'group',
+      })
+    })
+
+
+    console.log("data",data)
+
+    setUsers(data)
+  }
+
   // Set sidebar closed by default on mobile
   useEffect(() => {
     const handleResize = () => {
@@ -23,6 +86,8 @@ const ChatPage = () => {
         setSidebarOpen(true)
       }
     }
+
+    testinf()
     
     // Run once on mount
     handleResize()
@@ -47,6 +112,33 @@ const ChatPage = () => {
     // For now, we'll just log it and clear the input
     console.log('Message sent:', message);
     setMessage('');
+  };
+
+  const handleCreateGroup = async () => {
+    const result = await createGroup(groupName, phoneTags);
+    if (result.success) {
+      alert(result.message);
+      setIsModalOpen(false);
+      setGroupName('');
+      setPhoneTags([]);
+    } else {
+      alert(result.message);
+    }
+  };
+
+  const handleOpenModal = async () => {
+    const currentUserResponse = await fetch(`http://localhost:8000/auth/get-phone`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([Cookies.get("token")]), // Fetch the phone number of the current user
+    });
+    const currentUserData = await currentUserResponse.json();
+    if (currentUserData && currentUserData.length > 0) {
+      setPhoneTags([currentUserData[0].phone]); // Add the current user's phone number to the tags
+    }
+    setIsModalOpen(true);
   };
 
   return (
@@ -87,7 +179,7 @@ const ChatPage = () => {
           className={`fixed top-0 bottom-0 left-0 z-40 w-[280px] h-full overflow-hidden bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-r border-green-100 dark:border-green-900/50 shadow-xl transition-all duration-300 ease-in-out 
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
         >
-          <div className="pt-16 h-full overflow-y-auto">
+          <div className="pt-16 h-full overflow-y-auto flex flex-col">
             <ChatSidebar 
               users={users}
               searchTerm={searchTerm}
@@ -102,7 +194,14 @@ const ChatPage = () => {
                   setSidebarOpen(false);
                 }
               }}
+              setRoomId={setRoomId}
             />
+            <button
+              onClick={handleOpenModal}
+              className="mt-4 mx-4 bg-green-500 text-white px-4 py-2 rounded shadow"
+            >
+              Create Group
+            </button>
           </div>
         </div>
         
@@ -132,11 +231,43 @@ const ChatPage = () => {
             )}
             
             <div className="flex-1">
-              <Chats/>
+              <Chats
+          roomId={roomId}
+        />
             </div>
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Create Group"
+      >
+        <div className="space-y-4">
+          <input
+            type="text"
+            placeholder="Group Name"
+            value={groupName}
+            onChange={(e) => setGroupName(e.target.value)}
+            className="w-full p-2 border rounded"
+          />
+          <ReactTagInput
+            tags={phoneTags}
+            onChange={(newTags) => setPhoneTags(newTags)}
+            placeholder="Enter phone numbers and press Enter"
+            className="w-full p-2 border rounded"
+          />
+        </div>
+        <div className="flex justify-end mt-4">
+          <button
+            onClick={handleCreateGroup}
+            className="bg-green-500 text-white px-4 py-2 rounded"
+          >
+            Create
+          </button>
+        </div>
+      </Modal>
     </div>
   )
 }

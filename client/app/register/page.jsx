@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 
 const RegisterPage = () => {
   const router = useRouter();
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     language_preference: '',
@@ -30,7 +31,6 @@ const RegisterPage = () => {
       ...formData,
       [name]: value,
     });
-    console.log(formData);
   };
 
   const validateStep = () => {
@@ -85,6 +85,7 @@ const RegisterPage = () => {
           longitude: formData.longitude, // Use longitude from formData
         });
         if (response.success) {
+          // router.push('/dashboard');
           console.log('Registration successful:', response);
           router.push("/dashboard");
         } else {

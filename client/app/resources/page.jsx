@@ -309,10 +309,25 @@ const LearningModulesPage = () => {
 };
 
 const BlogPage = () => {
+  const [blogs, setBlogs] = useState([]);
   const [activeBlog, setActiveBlog] = useState(null);
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      const result = await fetchBlogsAction();
+      if (result.success) {
+        setBlogs(result.blogs);
+      } else {
+        console.error("Failed to fetch blogs");
+      }
+    };
+    fetchBlogs();
+  }, []);
 
   const handleBlogSelect = (blog) => {
     setActiveBlog(blog);
+    setShow(true);
   };
 
   return (

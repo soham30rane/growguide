@@ -3,13 +3,13 @@ export const users = [
   {
     id: 0,
     name: 'John Harvest',
-    role: 'Crop Expert',
+    // role: 'Crop Expert',
     avatar: '👨‍🌾',
-    online: true,
-    lastSeen: 'now',
+    // online: true,
+    // lastSeen: 'now',
     category: 'expert',
     badge: 'Wheat Specialist',
-    unread: 0
+    // unread: 0
   },
   {
     id: 1,

@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 
 import getGroup from '@/actions/group'
 import createGroup from '@/actions/create-group';
+import oneToOneChatAction from '@/actions/oneToOneChat';
 import Modal from '@/components/Modal';
 import ReactTagInput from "@pathofdev/react-tag-input"; // Install this library for tag input
 import "@pathofdev/react-tag-input/build/index.css"; // Import styles for the tag input
@@ -34,30 +35,30 @@ const ChatPage = () => {
     console.log("get Group",res)
 
     const data = [
-      {
-        id: "0000",
-        name: 'John Harvest',
-        role: 'John Harvest',
-        avatar: '👨‍🌾',
-        category: 'expert',
-        badge: 'expert',
-      },
-      {
-        id: "11111",
-        name: 'Sarah Fields',
-        role: 'Sarah Fields',
-        avatar: '👩‍🌾',
-        category: 'farmer',
-        badge: 'farmer',
-      },
-      {
-        id: "222222",
-        name: 'GrowWise Support',
-        role: 'GrowWise Support',
-        avatar: '🌱',
-        category: 'support',
-        badge: 'support',
-      },
+      // {
+      //   id: "0000",
+      //   name: 'John Harvest',
+      //   role: 'John Harvest',
+      //   avatar: '👨‍🌾',
+      //   category: 'expert',
+      //   badge: 'expert',
+      // },
+      // {
+      //   id: "11111",
+      //   name: 'Sarah Fields',
+      //   role: 'Sarah Fields',
+      //   avatar: '👩‍🌾',
+      //   category: 'farmer',
+      //   badge: 'farmer',
+      // },
+      // {
+      //   id: "222222",
+      //   name: 'GrowWise Support',
+      //   role: 'GrowWise Support',
+      //   avatar: '🌱',
+      //   category: 'support',
+      //   badge: 'support',
+      // },
     ]
 
     res.groups.map((group) => {
@@ -69,6 +70,25 @@ const ChatPage = () => {
         category: 'group',
         badge: 'group',
       })
+    })
+
+    const oneToOneChat = await oneToOneChatAction(Cookies.get("token"))
+    console.log("oneToOneChat",oneToOneChat)
+
+    const current_user_id = Cookies.get("token")
+
+    oneToOneChat.chats.map((chat) => {
+      const newData = {
+        // id: sort 2 id and append,
+        id : (current_user_id > chat.uid, chat.uid + current_user_id) ? chat.uid + current_user_id : current_user_id + chat.uid,
+        name: chat.username,
+        role: chat.username,
+        avatar: (chat.role === "Farmer") ? "🧑‍🌾" : ((chat.role === "Expert/Consultant") 
+        ? "👨‍🌾" : ((chat.role === "Support") ? "🌱" : "👩‍🔬")),
+        category: chat.roles,
+        badge: chat.roles,
+      }
+      data.push(newData)
     })
 
 

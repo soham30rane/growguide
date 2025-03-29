@@ -163,7 +163,7 @@ const RegisterPage = () => {
                         }
                         
                         // Reload page to apply translation changes
-                        window.location.reload();
+                        // window.location.reload();
                       }}
                     >
                       {lang}

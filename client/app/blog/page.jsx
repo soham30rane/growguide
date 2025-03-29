@@ -3,11 +3,13 @@ import React, { useState, useEffect } from 'react';
 import fetchBlogsAction from '@/actions/blogs';
 import { getRandomImage } from '../utils/randomImageGenerator';
 import BlogDetails from './BlogDetails';
+import CreateBlogModal from '../resources/CreateBlog'; // adjust path if needed
 
 const BlogPage = () => {
   const [blogs, setBlogs] = useState([]);
   const [activeBlog, setActiveBlog] = useState(null);
   const [show, setShow] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -29,9 +31,20 @@ const BlogPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-lime-50 to-emerald-100 p-6 dark:from-[#1e3b2f] dark:via-[#1e3b2f] dark:to-[#1e3b2f]">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-5xl font-extrabold text-center mb-6 pb-8 bg-gradient-to-r from-green-600 to-emerald-700 bg-clip-text text-transparent dark:from-green-400 dark:to-emerald-300">
-          Blog Posts
-        </h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-5xl font-extrabold text-center mb-6 pb-8 bg-gradient-to-r from-green-600 to-emerald-700 bg-clip-text text-transparent dark:from-green-400 dark:to-emerald-300">
+            Blog Posts
+          </h1>
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md transition-colors duration-300 flex items-center"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
+            Create New Blog
+          </button>
+        </div>
         {!show ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {blogs.map((blog) => (
@@ -76,6 +89,12 @@ const BlogPage = () => {
           <BlogDetails blog={activeBlog} onBack={() => setShow(false)} />
         )}
       </div>
+      {isCreateModalOpen && (
+        <CreateBlogModal 
+          isOpen={isCreateModalOpen} 
+          onClose={() => setIsCreateModalOpen(false)} 
+        />
+      )}
     </div>
   );
 };

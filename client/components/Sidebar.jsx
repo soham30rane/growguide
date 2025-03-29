@@ -5,7 +5,7 @@ import {
   RiPlantFill, RiDashboardLine, RiChat3Line, 
   RiBook2Line, RiSettings4Line
 } from 'react-icons/ri';
-import { FiBarChart2 } from 'react-icons/fi';
+import { FiBarChart2, FiList } from 'react-icons/fi'; // <-- imported FiList
 import { FaLeaf } from 'react-icons/fa';
 
 export default function Sidebar({ 
@@ -18,6 +18,7 @@ export default function Sidebar({
   const navItems = [
     { name: 'Dashboard', icon: <RiDashboardLine size={24} />, href: '/dashboard', id: 'dashboard' },
     { name: 'Scan', icon: <FaLeaf size={24} />, href: '/plant-detector', id: 'crops' },
+    { name: 'Track Plants', icon: <FiList size={24} />, href: '/track-plants', id: 'track-plants' }, // <-- new nav item
     { name: 'Resources', icon: <RiBook2Line size={24} />, href: '/blog', id: 'blog' },
     { name: 'Chatbot', icon: <RiChat3Line size={24} />, href: '/chatbot', id: 'chatbot' },
     { name: 'Community', icon: <FiBarChart2 size={24} />, href: '/community', id: 'community' },

@@ -3,30 +3,57 @@ import { cookies } from 'next/headers';
 
 export default async function registerAction(formData) {
   try {
-    let res = await fetch("http://localhost:8000/auth/register", {
+    // Get data ready for submission
+    console.log('Form data:', formData);
+    
+    // Make the request to your API
+    const response = await fetch("http://127.0.0.1:8000/auth/register", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: formData,
+      body: JSON.stringify(formData),
+      cache: 'no-store' // Important: prevent caching
     });
-    let data = await res.json();
-    console.log('Registration response:', data);
+    
+    // Parse the response
+    const data = await response.json();
+    console.log('API response data:', data);
+    
+    // Check for successful registration
     if (!data.error) {
-
-      const cookieStore = await cookies(); // Await cookies() before using it
+      // Set cookies with user data
+      const cookieStore = cookies();
       cookieStore.set('token', data.token);
       cookieStore.set('username', data.username);
-      cookieStore.set('latitude', data.latitude);
-      cookieStore.set('longitude', data.longitude);
+      cookieStore.set('latitude', data.latitude.toString());
+      cookieStore.set('longitude', data.longitude.toString());
       cookieStore.set('address', data.address);
       cookieStore.set('language_preference', data.language_preference);
       cookieStore.set('description', data.description);
       cookieStore.set('roles', data.roles);
-      return { success: true, token: data.token, username: data.username };
+      
+      // Return success to the client
+      return { 
+        success: true, 
+        token: data.token, 
+        username: data.username 
+      };
     }
-    return { success: false };
-  } catch (e) {
-    console.error({ message: e.message });
+    
+    // Return error to the client with message
+    return { 
+      success: false, 
+      message: data.message || "Registration failed"
+    };
+  } catch (error) {
+    // Log the full error for debugging
+    console.error('Registration action error:', error);
+    
+    // Return a formatted error to the client
+    return { 
+      success: false, 
+      message: error.message || "An error occurred during registration"
+    };
   }
 }

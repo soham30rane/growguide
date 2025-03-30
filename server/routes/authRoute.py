@@ -36,6 +36,7 @@ async def login(req: loginReqMod):
 
 @router.post("/register", response_model=userResMod)
 async def register(req: registerReqMod):
+    print("Hello from register")
     try:
         print("printing data", req)
         response = supabase.table("users").select("uid").eq("phone", req.phone).execute()

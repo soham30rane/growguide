@@ -92,9 +92,10 @@ const RegisterPage = () => {
           roles: formData.roles,
           description: formData.description,
           address: formData.address,
-          latitude: formData.latitude, // Use latitude from formData
-          longitude: formData.longitude, // Use longitude from formData
+          latitude: parseFloat(formData.latitude) || 0,
+          longitude: parseFloat(formData.longitude) || 0,
         });
+        console.log(response)
         if (response.success) {
           // router.push('/dashboard');
           console.log('Registration successful:', response);
